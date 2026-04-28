@@ -63,6 +63,7 @@ public class DashboardFrame extends JFrame {
     private JTextField txtFechaFin;
     private JLabel lblTotalIngresos;
     private JLabel lblTotalGastos;
+    private JLabel lblTotalBalance;
     private TableRowSorter<DefaultTableModel> sorter;
 
     public DashboardFrame(Usuario usuario) {
@@ -106,6 +107,8 @@ public class DashboardFrame extends JFrame {
         btnSalir.addActionListener(e -> salir());
 
         topPanel.add(lblWelcome, BorderLayout.WEST);
+        
+        lblBalance.setHorizontalAlignment(SwingConstants.CENTER);
         topPanel.add(lblBalance, BorderLayout.CENTER);
 
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -141,11 +144,11 @@ public class DashboardFrame extends JFrame {
             filterPanel.add(txtFiltroUsuario);
         }
 
-        filterPanel.add(new JLabel("  Desde (yyyy-MM-dd):"));
+        filterPanel.add(new JLabel("  Desde (dd-MM-yyyy):"));
         txtFechaInicio = new JTextField(8);
         filterPanel.add(txtFechaInicio);
 
-        filterPanel.add(new JLabel("  Hasta:"));
+        filterPanel.add(new JLabel("  Hasta (dd-MM-yyyy):"));
         txtFechaFin = new JTextField(8);
         filterPanel.add(txtFechaFin);
 
@@ -193,6 +196,7 @@ public class DashboardFrame extends JFrame {
         lblTotalGastos = (JLabel) cardGastos.getComponent(1);
 
         JPanel cardBalance = crearTarjeta("Balance Actual", "0.0 €", new Color(200, 230, 255));
+        lblTotalBalance = (JLabel) cardBalance.getComponent(1);
 
         summaryPanel.add(cardIngresos);
         summaryPanel.add(cardGastos);
@@ -262,13 +266,22 @@ public class DashboardFrame extends JFrame {
         DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
 
         for (Transaccion t : transacciones) {
+            // Convertir fecha de yyyy-MM-dd (DB) a dd-MM-yyyy (UI) si es necesario
+            String fechaUI = t.getFecha();
+            try {
+                if (fechaUI.contains("-") && fechaUI.indexOf("-") == 4) {
+                    Date d = new SimpleDateFormat("yyyy-MM-dd").parse(fechaUI);
+                    fechaUI = new SimpleDateFormat("dd-MM-yyyy").format(d);
+                }
+            } catch (Exception e) {}
+
             Object[] row = {
                     t.getId(),
                     t.getUsername(),
                     t.getTipo(),
                     t.getCategoria(),
                     t.getCantidad(),
-                    t.getFecha(),
+                    fechaUI,
                     t.getUsuarioId()
             };
             tableModel.addRow(row);
@@ -303,11 +316,14 @@ public class DashboardFrame extends JFrame {
         lblBalance.setText(String.format("Balance: %.2f €", balance));
         lblTotalIngresos.setText(String.format("%.2f €", ingresos));
         lblTotalGastos.setText(String.format("%.2f €", gastos));
+        lblTotalBalance.setText(String.format("%.2f €", balance));
 
         if (balance < 0) {
             lblBalance.setForeground(Color.RED);
+            lblTotalBalance.setForeground(Color.RED);
         } else {
             lblBalance.setForeground(new Color(0, 128, 0));
+            lblTotalBalance.setForeground(new Color(0, 128, 128));
         }
     }
 
@@ -345,15 +361,21 @@ public class DashboardFrame extends JFrame {
         }
 
         if (!inicio.isEmpty() || !fin.isEmpty()) {
+            final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             filters.add(new RowFilter<DefaultTableModel, Object>() {
                 @Override
                 public boolean include(Entry<? extends DefaultTableModel, ? extends Object> entry) {
                     String fechaStr = (String) entry.getValue(5);
                     try {
-                        if (!inicio.isEmpty() && fechaStr.compareTo(inicio) < 0)
-                            return false;
-                        if (!fin.isEmpty() && fechaStr.compareTo(fin) > 0)
-                            return false;
+                        Date fechaFila = sdf.parse(fechaStr);
+                        if (!inicio.isEmpty()) {
+                            Date dInicio = sdf.parse(inicio);
+                            if (fechaFila.before(dInicio)) return false;
+                        }
+                        if (!fin.isEmpty()) {
+                            Date dFin = sdf.parse(fin);
+                            if (fechaFila.after(dFin)) return false;
+                        }
                     } catch (Exception e) {
                         return false;
                     }
@@ -382,7 +404,7 @@ public class DashboardFrame extends JFrame {
 
         try {
             double cantidad = Double.parseDouble(cantidadStr);
-            String fecha = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            String fecha = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 
             Transaccion t = new Transaccion(0, usuarioActual.getId(), usuarioActual.getUsername(), tipo, categoria,
                     cantidad, fecha);
