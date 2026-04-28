@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +33,13 @@ public class TransaccionDAO {
 
     private List<Transaccion> obtenerTransacciones(String query, Integer parametroId) {
         List<Transaccion> lista = new ArrayList<>();
+        // Modificamos la query para hacer JOIN con Usuarios
+        String queryConJoin = query.replace("SELECT id, usuario_id, tipo, categoria, cantidad, fecha FROM Transacciones", 
+                                          "SELECT t.id, t.usuario_id, u.username, t.tipo, t.categoria, t.cantidad, t.fecha " +
+                                          "FROM Transacciones t JOIN Usuarios u ON t.usuario_id = u.id");
+        
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             PreparedStatement pstmt = conn.prepareStatement(queryConJoin)) {
             
             if (parametroId != null) {
                 pstmt.setInt(1, parametroId);
@@ -46,6 +50,7 @@ public class TransaccionDAO {
                     lista.add(new Transaccion(
                             rs.getInt("id"),
                             rs.getInt("usuario_id"),
+                            rs.getString("username"),
                             rs.getString("tipo"),
                             rs.getString("categoria"),
                             rs.getDouble("cantidad"),

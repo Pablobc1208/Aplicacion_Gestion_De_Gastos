@@ -6,6 +6,7 @@ package com.gastos.model;
 public class Transaccion {
     private int id;
     private int usuarioId;
+    private String username; // Nuevo campo para mostrar el nombre en lugar del ID
     private String tipo; // "Ingreso" o "Gasto"
     private String categoria;
     private double cantidad;
@@ -14,9 +15,10 @@ public class Transaccion {
     public Transaccion() {
     }
 
-    public Transaccion(int id, int usuarioId, String tipo, String categoria, double cantidad, String fecha) {
+    public Transaccion(int id, int usuarioId, String username, String tipo, String categoria, double cantidad, String fecha) {
         this.id = id;
         this.usuarioId = usuarioId;
+        this.username = username;
         this.tipo = tipo;
         this.categoria = categoria;
         this.cantidad = cantidad;
@@ -37,6 +39,14 @@ public class Transaccion {
 
     public void setUsuarioId(int usuarioId) {
         this.usuarioId = usuarioId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getTipo() {
