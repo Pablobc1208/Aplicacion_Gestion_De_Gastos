@@ -1,0 +1,11 @@
+com\gastos\view\DashboardFrame$2.class
+com\gastos\model\Usuario.class
+com\gastos\view\DashboardFrame.class
+com\gastos\model\Transaccion.class
+com\gastos\view\DashboardFrame$1.class
+com\gastos\view\LoginFrame.class
+com\gastos\dao\DatabaseConfig.class
+com\gastos\view\LoginFrame$1.class
+com\gastos\dao\UsuarioDAO.class
+com\gastos\dao\TransaccionDAO.class
+com\gastos\main\Main.class
