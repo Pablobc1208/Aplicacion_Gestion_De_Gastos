@@ -87,18 +87,27 @@ public class LoginFrame extends JFrame {
         gbc.gridx = 1; gbc.gridy = 1;
         formPanel.add(txtPassword, gbc);
 
-        // Panel inferior para el botón
-        JPanel bottomPanel = new JPanel();
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         bottomPanel.setOpaque(false);
+        
         btnLogin = new JButton("Iniciar Sesión");
         btnLogin.setFont(new Font("Arial", Font.BOLD, 14));
         btnLogin.setBackground(new Color(70, 130, 180)); // Steel Blue
         btnLogin.setForeground(Color.BLACK);
         btnLogin.setFocusPainted(false);
         
+        JButton btnRegister = new JButton("Registrarse");
+        btnRegister.setFont(new Font("Arial", Font.PLAIN, 14));
+        btnRegister.setFocusPainted(false);
+        
         btnLogin.addActionListener(e -> autenticarUsuario());
+        btnRegister.addActionListener(e -> {
+            new RegisterFrame().setVisible(true);
+            this.dispose();
+        });
         
         bottomPanel.add(btnLogin);
+        bottomPanel.add(btnRegister);
 
         // Añadir paneles al frame
         mainPanel.add(topPanel, BorderLayout.NORTH);

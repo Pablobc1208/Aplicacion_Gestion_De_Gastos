@@ -43,4 +43,53 @@ public class UsuarioDAO {
         return null;
     }
 
+    /**
+     * Registra un nuevo usuario con el rol por defecto 'estudiante'.
+     * 
+     * @param username Nombre de usuario
+     * @param password Contraseña
+     * @return true si se registró con éxito, false en caso contrario
+     */
+    public boolean registrarUsuario(String username, String password) {
+        String query = "INSERT INTO Usuarios (username, password, rol) VALUES (?, ?, ?)";
+        try (Connection conn = DatabaseConfig.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            pstmt.setString(3, "estudiante"); // Rol por defecto
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error al registrar usuario: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Comprueba si ya existe un usuario con el mismo nombre.
+     * 
+     * @param username El nombre de usuario a comprobar
+     * @return true si existe, false en caso contrario
+     */
+    public boolean existeUsuario(String username) {
+        String query = "SELECT COUNT(*) FROM Usuarios WHERE username = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, username);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al comprobar existencia de usuario: " + e.getMessage());
+        }
+        return false;
+    }
+
 }
