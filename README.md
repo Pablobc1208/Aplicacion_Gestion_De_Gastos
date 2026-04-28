@@ -54,7 +54,3 @@ El proyecto utiliza las siguientes librerías gestionadas a través del `pom.xml
 - `resources`: Recursos estáticos (Logo, CSS ficticio, CSV de datos iniciales).
 
 ---
-
-## Autoría y Entrega
-Este proyecto ha sido desarrollado cumpliendo estrictamente con la rúbrica de evaluación de la Actividad 9.
-Nombre del archivo de entrega: `DAX_PROG_Act9_ApellidosNombre.zip`
