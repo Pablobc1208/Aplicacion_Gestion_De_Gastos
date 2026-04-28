@@ -6,8 +6,8 @@ package com.gastos.model;
 public class Transaccion {
     private int id;
     private int usuarioId;
-    private String username; // Nuevo campo para mostrar el nombre en lugar del ID
-    private String tipo; // "Ingreso" o "Gasto"
+    private String username; 
+    private String tipo; 
     private String categoria;
     private double cantidad;
     private String fecha;
@@ -86,6 +86,7 @@ public class Transaccion {
         return "Transaccion{" +
                 "id=" + id +
                 ", usuarioId=" + usuarioId +
+                ", username='" + username + '\'' +
                 ", tipo='" + tipo + '\'' +
                 ", categoria='" + categoria + '\'' +
                 ", cantidad=" + cantidad +

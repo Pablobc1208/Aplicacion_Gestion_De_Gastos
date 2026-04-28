@@ -93,7 +93,7 @@ public class LoginFrame extends JFrame {
         btnLogin = new JButton("Iniciar Sesión");
         btnLogin.setFont(new Font("Arial", Font.BOLD, 14));
         btnLogin.setBackground(new Color(70, 130, 180)); // Steel Blue
-        btnLogin.setForeground(Color.WHITE);
+        btnLogin.setForeground(Color.BLACK);
         btnLogin.setFocusPainted(false);
         
         btnLogin.addActionListener(e -> autenticarUsuario());

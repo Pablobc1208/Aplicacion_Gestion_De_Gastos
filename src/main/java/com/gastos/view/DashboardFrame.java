@@ -98,6 +98,8 @@ public class DashboardFrame extends JFrame {
         lblBalance.setForeground(new Color(0, 128, 0)); // Dark green
 
         JButton btnLogout = new JButton("Cerrar Sesión");
+        btnLogout.setBackground(new Color(70, 130, 180)); // Steel Blue
+        btnLogout.setForeground(Color.BLACK); // Texto en negro para legibilidad
         btnLogout.addActionListener(e -> cerrarSesion());
 
         JButton btnSalir = new JButton("Salir");
@@ -275,11 +277,18 @@ public class DashboardFrame extends JFrame {
                 ingresos += t.getCantidad();
             } else {
                 gastos += t.getCantidad();
-                // Acumular en el dataset para el gráfico de gastos
-                Number actual = dataset.getValue(t.getCategoria());
-                if (actual == null) {
+                // Acumular en el dataset para el gráfico de gastos (Evitar UnknownKeyException)
+                int index = -1;
+                try {
+                    index = dataset.getIndex(t.getCategoria());
+                } catch (Exception ex) {
+                    index = -1;
+                }
+
+                if (index == -1) {
                     dataset.setValue(t.getCategoria(), t.getCantidad());
                 } else {
+                    Number actual = dataset.getValue(index);
                     dataset.setValue(t.getCategoria(), actual.doubleValue() + t.getCantidad());
                 }
             }
