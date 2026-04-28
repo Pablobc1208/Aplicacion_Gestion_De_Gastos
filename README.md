@@ -1,7 +1,7 @@
 # Aplicación de Gestión de Gastos Estudiantil
 
 ## Resumen del Proyecto
-Este proyecto es una solución integral para el **Control de Gastos Estudiantil**, desarrollada en Java como parte de la Actividad 9 de Programación. La aplicación permite a los usuarios registrar ingresos y gastos, categorizarlos y visualizar su balance financiero en tiempo real. 
+Este proyecto es una solución integral para el **Control de Gastos Estudiantil**, desarrollada en Java como parte de la Actividad 8 de Programación. La aplicación permite a los usuarios registrar ingresos y gastos, categorizarlos y visualizar su balance financiero en tiempo real. 
 
 El sistema utiliza una arquitectura **MVC (Modelo-Vista-Controlador)** y patrones **DAO (Data Access Object)** para separar la lógica de negocio de la persistencia de datos.
 
