@@ -3,15 +3,28 @@ package com.gastos.view;
 import com.gastos.dao.UsuarioDAO;
 import com.gastos.model.Usuario;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.Font;
+import java.awt.Color;
+import java.awt.Image;
 
 /**
  * Ventana de inicio de sesión de la aplicación.
  */
 public class LoginFrame extends JFrame {
+    private static final long serialVersionUID = 1L;
 
     private JTextField txtUsername;
     private JPasswordField txtPassword;
@@ -32,15 +45,23 @@ public class LoginFrame extends JFrame {
         mainPanel.setBackground(new Color(240, 248, 255)); // Alice Blue
 
         // Panel superior para el título/logo
-        JPanel topPanel = new JPanel();
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         topPanel.setOpaque(false);
+        
+        // Logo
+        try {
+            ImageIcon icon = new ImageIcon(getClass().getResource("/logo.png"));
+            Image img = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+            JLabel lblLogo = new JLabel(new ImageIcon(img));
+            topPanel.add(lblLogo);
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar el logo: " + e.getMessage());
+        }
+
         JLabel lblTitle = new JLabel("Control de Gastos");
-        lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblTitle.setForeground(new Color(25, 25, 112)); // Midnight Blue
         topPanel.add(lblTitle);
-        // Espacio para logo (opcional)
-        // JLabel lblLogo = new JLabel(new ImageIcon("path/to/logo.png"));
-        // topPanel.add(lblLogo);
 
         // Panel central para el formulario
         JPanel formPanel = new JPanel(new GridBagLayout());
@@ -75,18 +96,19 @@ public class LoginFrame extends JFrame {
         btnLogin.setForeground(Color.WHITE);
         btnLogin.setFocusPainted(false);
         
-        btnLogin.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                autenticarUsuario();
-            }
-        });
+        btnLogin.addActionListener(e -> autenticarUsuario());
         
         bottomPanel.add(btnLogin);
 
         // Añadir paneles al frame
         mainPanel.add(topPanel, BorderLayout.NORTH);
-        mainPanel.add(formPanel, BorderLayout.CENTER);
+        
+        // Envolver formPanel en un panel que lo centre verticalmente
+        JPanel wrapper = new JPanel(new GridBagLayout());
+        wrapper.setOpaque(false);
+        wrapper.add(formPanel);
+        mainPanel.add(wrapper, BorderLayout.CENTER);
+        
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         add(mainPanel);

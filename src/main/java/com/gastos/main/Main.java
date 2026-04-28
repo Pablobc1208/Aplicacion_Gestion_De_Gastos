@@ -3,7 +3,7 @@ package com.gastos.main;
 import com.gastos.dao.DatabaseConfig;
 import com.gastos.view.LoginFrame;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 /**
  * Clase principal que arranca la aplicación.
@@ -14,11 +14,11 @@ public class Main {
         System.out.println("Inicializando la base de datos...");
         DatabaseConfig.inicializarBaseDeDatos();
 
-        // Configurar el Look and Feel para que se vea más nativo/bonito
+        // Configurar el Look and Feel FlatLaf para un diseño moderno
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            com.formdev.flatlaf.FlatLightLaf.setup();
         } catch (Exception e) {
-            System.err.println("No se pudo establecer el Look and Feel del sistema.");
+            System.err.println("No se pudo establecer el Look and Feel FlatLaf.");
         }
 
         // Lanzar la interfaz gráfica en el hilo de despacho de eventos
