@@ -34,18 +34,17 @@ public class RegisterFrame extends JFrame {
         usuarioDAO = new UsuarioDAO();
 
         setTitle("Control de Gastos - Registro");
-        setSize(400, 350);
+        setSize(450, 450);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(new Color(240, 248, 255));
+        mainPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Título
         JLabel lblTitle = new JLabel("Crear Cuenta", JLabel.CENTER);
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        lblTitle.setForeground(new Color(25, 25, 112));
         lblTitle.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 0, 10, 0));
         mainPanel.add(lblTitle, BorderLayout.NORTH);
 
@@ -57,11 +56,17 @@ public class RegisterFrame extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         JLabel lblUser = new JLabel("Usuario:");
-        txtUsername = new JTextField(15);
+        lblUser.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtUsername = new JTextField();
+        txtUsername.setPreferredSize(new java.awt.Dimension(200, 35));
         JLabel lblPass = new JLabel("Contraseña:");
-        txtPassword = new JPasswordField(15);
+        lblPass.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtPassword = new JPasswordField();
+        txtPassword.setPreferredSize(new java.awt.Dimension(200, 35));
         JLabel lblConfirm = new JLabel("Confirmar:");
-        txtConfirmPassword = new JPasswordField(15);
+        lblConfirm.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtConfirmPassword = new JPasswordField();
+        txtConfirmPassword.setPreferredSize(new java.awt.Dimension(200, 35));
 
         gbc.gridx = 0; gbc.gridy = 0;
         formPanel.add(lblUser, gbc);
@@ -85,12 +90,14 @@ public class RegisterFrame extends JFrame {
         buttonPanel.setOpaque(false);
 
         btnRegister = new JButton("Registrarse");
-        btnRegister.setBackground(new Color(70, 130, 180));
-        btnRegister.setForeground(Color.BLACK);
-        btnRegister.setFont(new Font("Arial", Font.BOLD, 14));
+        btnRegister.setBackground(new Color(41, 128, 185)); // Azul brillante moderno
+        btnRegister.setForeground(Color.WHITE);
+        btnRegister.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        btnRegister.setPreferredSize(new java.awt.Dimension(140, 35));
 
         btnBack = new JButton("Volver");
-        btnBack.setFont(new Font("Arial", Font.PLAIN, 14));
+        btnBack.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        btnBack.setPreferredSize(new java.awt.Dimension(120, 35));
 
         btnRegister.addActionListener(e -> registrar());
         btnBack.addActionListener(e -> {

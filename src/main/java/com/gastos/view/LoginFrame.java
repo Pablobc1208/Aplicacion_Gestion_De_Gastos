@@ -35,14 +35,14 @@ public class LoginFrame extends JFrame {
         usuarioDAO = new UsuarioDAO();
 
         setTitle("Control de Gastos Estudiantil - Login");
-        setSize(400, 300);
+        setSize(450, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        // Panel principal con BorderLayout
+        // Panel principal con BorderLayout y un poco de margen exterior
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(new Color(240, 248, 255)); // Alice Blue
+        mainPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Panel superior para el título/logo
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
@@ -60,7 +60,7 @@ public class LoginFrame extends JFrame {
 
         JLabel lblTitle = new JLabel("Control de Gastos");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        lblTitle.setForeground(new Color(25, 25, 112)); // Midnight Blue
+        // Usamos el color de texto por defecto del Look and Feel
         topPanel.add(lblTitle);
 
         // Panel central para el formulario
@@ -70,12 +70,14 @@ public class LoginFrame extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
 
         JLabel lblUsername = new JLabel("Usuario:");
-        lblUsername.setFont(new Font("Arial", Font.PLAIN, 14));
-        txtUsername = new JTextField(15);
+        lblUsername.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtUsername = new JTextField();
+        txtUsername.setPreferredSize(new java.awt.Dimension(200, 35));
 
         JLabel lblPassword = new JLabel("Contraseña:");
-        lblPassword.setFont(new Font("Arial", Font.PLAIN, 14));
-        txtPassword = new JPasswordField(15);
+        lblPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtPassword = new JPasswordField();
+        txtPassword.setPreferredSize(new java.awt.Dimension(200, 35));
 
         gbc.gridx = 0; gbc.gridy = 0;
         formPanel.add(lblUsername, gbc);
@@ -91,14 +93,16 @@ public class LoginFrame extends JFrame {
         bottomPanel.setOpaque(false);
         
         btnLogin = new JButton("Iniciar Sesión");
-        btnLogin.setFont(new Font("Arial", Font.BOLD, 14));
-        btnLogin.setBackground(new Color(70, 130, 180)); // Steel Blue
-        btnLogin.setForeground(Color.BLACK);
+        btnLogin.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        btnLogin.setBackground(new Color(41, 128, 185)); // Azul brillante moderno
+        btnLogin.setForeground(Color.WHITE);
         btnLogin.setFocusPainted(false);
+        btnLogin.setPreferredSize(new java.awt.Dimension(140, 35));
         
         JButton btnRegister = new JButton("Registrarse");
-        btnRegister.setFont(new Font("Arial", Font.PLAIN, 14));
+        btnRegister.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         btnRegister.setFocusPainted(false);
+        btnRegister.setPreferredSize(new java.awt.Dimension(120, 35));
         
         btnLogin.addActionListener(e -> autenticarUsuario());
         btnRegister.addActionListener(e -> {

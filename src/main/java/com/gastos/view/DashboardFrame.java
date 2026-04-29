@@ -96,11 +96,13 @@ public class DashboardFrame extends JFrame {
 
         lblBalance = new JLabel("Balance: 0.0 €");
         lblBalance.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblBalance.setForeground(new Color(0, 128, 0)); // Dark green
+        lblBalance.setForeground(new Color(46, 204, 113)); // Bright green
 
         JButton btnLogout = new JButton("Cerrar Sesión");
-        btnLogout.setBackground(new Color(70, 130, 180)); // Steel Blue
-        btnLogout.setForeground(Color.BLACK); // Texto en negro para legibilidad
+        btnLogout.setBackground(new Color(231, 76, 60)); // Alizarin Red
+        btnLogout.setForeground(Color.WHITE); 
+        btnLogout.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnLogout.setFocusPainted(false);
         btnLogout.addActionListener(e -> cerrarSesion());
 
         JButton btnSalir = new JButton("Salir");
@@ -189,13 +191,13 @@ public class DashboardFrame extends JFrame {
         JPanel summaryPanel = new JPanel(new GridLayout(1, 3, 10, 0));
         summaryPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
-        JPanel cardIngresos = crearTarjeta("Total Ingresos", "0.0 €", new Color(200, 255, 200));
+        JPanel cardIngresos = crearTarjeta("Total Ingresos", "0.0 €", new Color(30, 62, 43), new Color(46, 204, 113));
         lblTotalIngresos = (JLabel) cardIngresos.getComponent(1);
 
-        JPanel cardGastos = crearTarjeta("Total Gastos", "0.0 €", new Color(255, 200, 200));
+        JPanel cardGastos = crearTarjeta("Total Gastos", "0.0 €", new Color(74, 35, 35), new Color(231, 76, 60));
         lblTotalGastos = (JLabel) cardGastos.getComponent(1);
 
-        JPanel cardBalance = crearTarjeta("Balance Actual", "0.0 €", new Color(200, 230, 255));
+        JPanel cardBalance = crearTarjeta("Balance Actual", "0.0 €", new Color(27, 54, 93), new Color(52, 152, 219));
         lblTotalBalance = (JLabel) cardBalance.getComponent(1);
 
         summaryPanel.add(cardIngresos);
@@ -233,21 +235,24 @@ public class DashboardFrame extends JFrame {
         cargarDatos();
     }
 
-    private JPanel crearTarjeta(String titulo, String valor, Color color) {
+    private JPanel crearTarjeta(String titulo, String valor, Color bgColor, Color fgColor) {
         JPanel p = new JPanel(new BorderLayout());
-        p.setBackground(color);
-        p.setBorder(BorderFactory.createLineBorder(color.darker(), 1));
+        p.setBackground(bgColor);
+        p.setBorder(BorderFactory.createLineBorder(fgColor, 2, true));
 
         JLabel lblTitulo = new JLabel(titulo, SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblTitulo.setForeground(fgColor);
+        lblTitulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 5, 0));
 
         JLabel lblValor = new JLabel(valor, SwingConstants.CENTER);
-        lblValor.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        lblValor.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblValor.setForeground(Color.WHITE);
         lblValor.setName(titulo); // Para identificarla luego
 
         p.add(lblTitulo, BorderLayout.NORTH);
         p.add(lblValor, BorderLayout.CENTER);
-        p.setPreferredSize(new Dimension(150, 80));
+        p.setPreferredSize(new Dimension(150, 90));
         return p;
     }
 
@@ -319,11 +324,9 @@ public class DashboardFrame extends JFrame {
         lblTotalBalance.setText(String.format("%.2f €", balance));
 
         if (balance < 0) {
-            lblBalance.setForeground(Color.RED);
-            lblTotalBalance.setForeground(Color.RED);
+            lblBalance.setForeground(new Color(231, 76, 60)); // Alizarin Red
         } else {
-            lblBalance.setForeground(new Color(0, 128, 0));
-            lblTotalBalance.setForeground(new Color(0, 128, 128));
+            lblBalance.setForeground(new Color(46, 204, 113)); // Bright green
         }
     }
 
@@ -334,6 +337,21 @@ public class DashboardFrame extends JFrame {
                     "Gastos por Categoría",
                     dataset,
                     true, true, false);
+            
+            // Adaptar colores del gráfico para el modo oscuro
+            pieChart.setBackgroundPaint(new Color(0, 0, 0, 0)); // Transparente
+            pieChart.getTitle().setPaint(Color.WHITE);
+            pieChart.getLegend().setBackgroundPaint(new Color(0, 0, 0, 0));
+            pieChart.getLegend().setItemPaint(Color.WHITE);
+            
+            org.jfree.chart.plot.PiePlot<?> plot = (org.jfree.chart.plot.PiePlot<?>) pieChart.getPlot();
+            plot.setBackgroundPaint(new Color(0, 0, 0, 0));
+            plot.setOutlinePaint(null);
+            plot.setLabelBackgroundPaint(new Color(40, 40, 40));
+            plot.setLabelPaint(Color.WHITE);
+            plot.setLabelShadowPaint(null);
+            plot.setLabelOutlinePaint(null);
+
             ChartPanel chartPanel = new ChartPanel(pieChart);
             chartPanelContainer.add(chartPanel, BorderLayout.CENTER);
         } else {
