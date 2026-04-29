@@ -14,9 +14,19 @@ public class Main {
         System.out.println("Inicializando la base de datos...");
         DatabaseConfig.inicializarBaseDeDatos();
 
-        // Configurar el Look and Feel FlatLaf para un diseño moderno
+        // Configurar el Look and Feel FlatLaf para un diseño moderno oscuro
         try {
-            com.formdev.flatlaf.FlatLightLaf.setup();
+            com.formdev.flatlaf.FlatDarkLaf.setup();
+            
+            // Configurar propiedades globales para un aspecto más premium
+            javax.swing.UIManager.put( "Button.arc", 15 );
+            javax.swing.UIManager.put( "Component.arc", 15 );
+            javax.swing.UIManager.put( "ProgressBar.arc", 15 );
+            javax.swing.UIManager.put( "TextComponent.arc", 15 );
+            
+            // Colores más modernos para Focus y selección
+            javax.swing.UIManager.put( "Component.focusWidth", 2 );
+            javax.swing.UIManager.put( "Component.innerFocusWidth", 1 );
         } catch (Exception e) {
             System.err.println("No se pudo establecer el Look and Feel FlatLaf.");
         }
