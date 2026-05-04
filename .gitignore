@@ -21,3 +21,4 @@ buildNumber.properties
 *.lst
 *.log
 *.txt
+*.db
