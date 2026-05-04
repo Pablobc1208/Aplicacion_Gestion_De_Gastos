@@ -31,6 +31,7 @@ public class DatabaseConfig {
      * Inicializa la base de datos creando las tablas si no existen.
      */
     public static void inicializarBaseDeDatos() {
+        // SQL para crear las tablas de usuarios y transacciones
         String sqlUsuarios = "CREATE TABLE IF NOT EXISTS Usuarios ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "username TEXT UNIQUE NOT NULL,"
@@ -51,10 +52,11 @@ public class DatabaseConfig {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
             
+            // Ejecutamos los CREATE TABLE
             stmt.execute(sqlUsuarios);
             stmt.execute(sqlTransacciones);
             
-            // Verificar si hay usuarios, si no, cargar el CSV
+            // Si no hay usuarios, cargamos los datos del CSV de prueba
             if (!existenUsuarios(conn)) {
                 cargarDatosIniciales(conn);
             }

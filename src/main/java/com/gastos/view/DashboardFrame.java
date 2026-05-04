@@ -123,7 +123,7 @@ public class DashboardFrame extends JFrame {
         // --- Panel Central (Tabla y Filtros) ---
         JPanel centerPanel = new JPanel(new BorderLayout(5, 5));
 
-        // Filtros (Organizados en dos filas para visibilidad)
+        // Pongo los filtros en dos filas porque en una sola no cabían los botones
         JPanel filterPanel = new JPanel(new GridLayout(2, 1, 5, 5));
         filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -185,7 +185,7 @@ public class DashboardFrame extends JFrame {
             }
         };
         table = new JTable(tableModel);
-        // Ocultar la columna u_id (índice 6)
+        // Oculto la columna u_id porque el usuario no necesita verla, solo sirve para programar
         table.getColumnModel().getColumn(6).setMinWidth(0);
         table.getColumnModel().getColumn(6).setMaxWidth(0);
         table.getColumnModel().getColumn(6).setWidth(0);
@@ -342,9 +342,9 @@ public class DashboardFrame extends JFrame {
         lblTotalBalance.setText(String.format("%.2f €", balance));
 
         if (balance < 0) {
-            lblBalance.setForeground(new Color(231, 76, 60)); // Alizarin Red
+            lblBalance.setForeground(new Color(231, 76, 60)); // Rojo si estamos en números rojos
         } else {
-            lblBalance.setForeground(new Color(46, 204, 113)); // Bright green
+            lblBalance.setForeground(new Color(46, 204, 113)); // Verde si hay dinero
         }
     }
 
@@ -356,8 +356,8 @@ public class DashboardFrame extends JFrame {
                     dataset,
                     true, true, false);
             
-            // Adaptar colores del gráfico para el modo oscuro
-            pieChart.setBackgroundPaint(new Color(0, 0, 0, 0)); // Transparente
+            // Pongo el fondo transparente y las letras en blanco para que pegue con el diseño oscuro
+            pieChart.setBackgroundPaint(new Color(0, 0, 0, 0)); 
             pieChart.getTitle().setPaint(Color.WHITE);
             pieChart.getLegend().setBackgroundPaint(new Color(0, 0, 0, 0));
             pieChart.getLegend().setItemPaint(Color.WHITE);

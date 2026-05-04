@@ -14,10 +14,8 @@ import java.util.List;
  */
 public class TransaccionDAO {
 
-    /**
-     * Obtiene todas las transacciones (para el Admin).
-     */
     public List<Transaccion> obtenerTodas() {
+        // Hago un JOIN para sacar el nombre del usuario junto con el gasto
         String query = "SELECT t.id, t.usuario_id, u.username, t.tipo, t.categoria, t.cantidad, t.fecha " +
                 "FROM Transacciones t JOIN Usuarios u ON t.usuario_id = u.id";
         return obtenerListaTransacciones(query, null);
@@ -63,13 +61,8 @@ public class TransaccionDAO {
         return lista;
     }
 
-    /**
-     * Añade una nueva transacción.
-     * 
-     * @param t Objeto Transaccion
-     * @return true si se añadió con éxito
-     */
     public boolean anadirTransaccion(Transaccion t) {
+        // Query para insertar la nueva transacción en la tabla
         String query = "INSERT INTO Transacciones (usuario_id, tipo, categoria, cantidad, fecha) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConfig.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {

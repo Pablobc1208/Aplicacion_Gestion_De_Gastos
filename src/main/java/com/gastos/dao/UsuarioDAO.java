@@ -12,15 +12,8 @@ import java.sql.SQLException;
  */
 public class UsuarioDAO {
 
-    /**
-     * Autentica a un usuario por username y password.
-     * 
-     * @param username El nombre de usuario
-     * @param password La contraseña
-     * @return Objeto Usuario si las credenciales son correctas, null en caso
-     *         contrario
-     */
     public Usuario autenticar(String username, String password) {
+        // Buscamos si existe el usuario con esa contraseña
         String query = "SELECT id, username, password, rol FROM Usuarios WHERE username = ? AND password = ?";
         try (Connection conn = DatabaseConfig.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -43,14 +36,8 @@ public class UsuarioDAO {
         return null;
     }
 
-    /**
-     * Registra un nuevo usuario con el rol por defecto 'estudiante'.
-     * 
-     * @param username Nombre de usuario
-     * @param password Contraseña
-     * @return true si se registró con éxito, false en caso contrario
-     */
     public boolean registrarUsuario(String username, String password) {
+        // Por defecto todos los nuevos son 'estudiante'
         String query = "INSERT INTO Usuarios (username, password, rol) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConfig.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {

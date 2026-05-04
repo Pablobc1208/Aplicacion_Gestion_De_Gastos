@@ -105,6 +105,12 @@ public class RegisterFrame extends JFrame {
             this.dispose();
         });
 
+        // También pongo que funcione el Enter aquí para que sea igual que en el login
+        java.awt.event.ActionListener enterAction = e -> registrar();
+        txtUsername.addActionListener(enterAction);
+        txtPassword.addActionListener(enterAction);
+        txtConfirmPassword.addActionListener(enterAction);
+
         buttonPanel.add(btnBack);
         buttonPanel.add(btnRegister);
 

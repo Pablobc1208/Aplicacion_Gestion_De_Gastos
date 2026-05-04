@@ -14,11 +14,11 @@ public class Main {
         System.out.println("Inicializando la base de datos...");
         DatabaseConfig.inicializarBaseDeDatos();
 
-        // Configurar el Look and Feel FlatLaf para un diseño moderno oscuro
+        // Uso FlatLaf para que la aplicación no parezca de los años 90 (diseño oscuro)
         try {
             com.formdev.flatlaf.FlatDarkLaf.setup();
             
-            // Configurar propiedades globales para un aspecto más premium
+            // Pongo los bordes un poco redondeados para que se vea más moderno
             javax.swing.UIManager.put( "Button.arc", 15 );
             javax.swing.UIManager.put( "Component.arc", 15 );
             javax.swing.UIManager.put( "ProgressBar.arc", 15 );

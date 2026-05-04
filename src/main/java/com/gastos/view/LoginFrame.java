@@ -60,7 +60,7 @@ public class LoginFrame extends JFrame {
 
         JLabel lblTitle = new JLabel("Control de Gastos");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        // Usamos el color de texto por defecto del Look and Feel
+        // Añado el título al panel de arriba
         topPanel.add(lblTitle);
 
         // Panel central para el formulario
@@ -109,6 +109,11 @@ public class LoginFrame extends JFrame {
             new RegisterFrame().setVisible(true);
             this.dispose();
         });
+
+        // Añado que se pueda pulsar Enter para entrar sin tener que darle al botón
+        java.awt.event.ActionListener enterAction = e -> autenticarUsuario();
+        txtUsername.addActionListener(enterAction);
+        txtPassword.addActionListener(enterAction);
         
         bottomPanel.add(btnLogin);
         bottomPanel.add(btnRegister);
@@ -140,11 +145,9 @@ public class LoginFrame extends JFrame {
         if (usuario != null) {
             JOptionPane.showMessageDialog(this, "Bienvenido " + usuario.getUsername() + " (" + usuario.getRol() + ")", "Login Exitoso", JOptionPane.INFORMATION_MESSAGE);
             
-            // Abrir Dashboard
+            // Si el login es correcto, abro el Dashboard y cierro esta ventana
             DashboardFrame dashboard = new DashboardFrame(usuario);
             dashboard.setVisible(true);
-            
-            // Cerrar Login
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error de Login", JOptionPane.ERROR_MESSAGE);
