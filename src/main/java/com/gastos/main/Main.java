@@ -14,19 +14,19 @@ public class Main {
         System.out.println("Inicializando la base de datos...");
         DatabaseConfig.inicializarBaseDeDatos();
 
-        // Uso FlatLaf para que la aplicación no parezca de los años 90 (diseño oscuro)
+        // Uso FlatLaf para que la aplicación no parezca de los años 90 
         try {
             com.formdev.flatlaf.FlatDarkLaf.setup();
-            
+
             // Pongo los bordes un poco redondeados para que se vea más moderno
-            javax.swing.UIManager.put( "Button.arc", 15 );
-            javax.swing.UIManager.put( "Component.arc", 15 );
-            javax.swing.UIManager.put( "ProgressBar.arc", 15 );
-            javax.swing.UIManager.put( "TextComponent.arc", 15 );
-            
+            javax.swing.UIManager.put("Button.arc", 15);
+            javax.swing.UIManager.put("Component.arc", 15);
+            javax.swing.UIManager.put("ProgressBar.arc", 15);
+            javax.swing.UIManager.put("TextComponent.arc", 15);
+
             // Colores más modernos para Focus y selección
-            javax.swing.UIManager.put( "Component.focusWidth", 2 );
-            javax.swing.UIManager.put( "Component.innerFocusWidth", 1 );
+            javax.swing.UIManager.put("Component.focusWidth", 2);
+            javax.swing.UIManager.put("Component.innerFocusWidth", 1);
         } catch (Exception e) {
             System.err.println("No se pudo establecer el Look and Feel FlatLaf.");
         }

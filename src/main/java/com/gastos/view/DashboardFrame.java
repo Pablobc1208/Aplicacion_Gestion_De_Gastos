@@ -199,7 +199,8 @@ public class DashboardFrame extends JFrame {
 
         // --- Panel Derecho (Gráfica) ---
         chartPanelContainer = new JPanel(new BorderLayout());
-        chartPanelContainer.setPreferredSize(new Dimension(350, 0));
+        // Le doy más anchura para que los textos de la gráfica no se corten
+        chartPanelContainer.setPreferredSize(new Dimension(450, 0));
         contentPane.add(chartPanelContainer, BorderLayout.EAST);
 
         // --- Panel Inferior (Formulario y Resumen) ---
@@ -369,6 +370,13 @@ public class DashboardFrame extends JFrame {
             plot.setLabelPaint(Color.WHITE);
             plot.setLabelShadowPaint(null);
             plot.setLabelOutlinePaint(null);
+            
+            // Con esto evitamos que las palabras se corten feo y salgan más simples
+            plot.setSimpleLabels(true);
+            plot.setInteriorGap(0.05); // Dejo un poco de hueco para los textos largos
+            
+            // Llamo a mi método para que cada categoría tenga su color chulo
+            configurarColores(plot, dataset);
 
             ChartPanel chartPanel = new ChartPanel(pieChart);
             chartPanelContainer.add(chartPanel, BorderLayout.CENTER);
@@ -378,6 +386,34 @@ public class DashboardFrame extends JFrame {
         }
         chartPanelContainer.revalidate();
         chartPanelContainer.repaint();
+    }
+
+    // Método para controlar los colores de la gráfica
+    private void configurarColores(org.jfree.chart.plot.PiePlot<?> plot, DefaultPieDataset<String> dataset) {
+        // Colores fijos para las categorías que ya conocemos
+        java.util.Map<String, Color> coloresFijos = new java.util.HashMap<>();
+        coloresFijos.put("Comida", new Color(231, 76, 60));      // Rojo
+        coloresFijos.put("Transporte", new Color(52, 152, 219));  // Azul
+        coloresFijos.put("Material Escolar", new Color(46, 204, 113)); // Verde
+        coloresFijos.put("Ocio", new Color(241, 196, 15));      // Amarillo
+        coloresFijos.put("Alojamiento", new Color(155, 89, 182)); // Morado
+        coloresFijos.put("Deporte", new Color(230, 126, 34));    // Naranja
+
+        // Recorro el dataset para asignar los colores
+        for (int i = 0; i < dataset.getItemCount(); i++) {
+            String categoria = dataset.getKey(i);
+            if (coloresFijos.containsKey(categoria)) {
+                plot.setSectionPaint(categoria, coloresFijos.get(categoria));
+            } else {
+                // Si es una categoría nueva, le invento un color basado en el nombre (hash)
+                int hash = categoria.hashCode();
+                int r = (hash & 0xFF0000) >> 16;
+                int g = (hash & 0x00FF00) >> 8;
+                int b = (hash & 0x0000FF);
+                // Aseguro que no sea muy oscuro para que se vea
+                plot.setSectionPaint(categoria, new Color((r % 150) + 50, (g % 150) + 50, (b % 150) + 50));
+            }
+        }
     }
 
     private void aplicarFiltro() {
@@ -459,36 +495,49 @@ public class DashboardFrame extends JFrame {
     }
 
     private void borrarTransaccion() {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar una fila de la tabla.", "Aviso",
+        // Ahora pillo todas las filas seleccionadas, no solo una
+        int[] selectedRows = table.getSelectedRows();
+        
+        if (selectedRows.length == 0) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar al menos una fila de la tabla.", "Aviso",
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // Convertir índice por si hay filtros aplicados
-        int modelRow = table.convertRowIndexToModel(selectedRow);
-
-        int idTransaccion = (int) tableModel.getValueAt(modelRow, 0);
-        int idUsuarioTrans = (int) tableModel.getValueAt(modelRow, 6);
-
-        // Validación de seguridad (por si acaso)
-        if ("Estudiante".equals(usuarioActual.getRol()) && usuarioActual.getId() != idUsuarioTrans) {
-            JOptionPane.showMessageDialog(this, "No tiene permisos para borrar esta transacción.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
+        String mensaje;
+        if (selectedRows.length == 1) {
+            int modelRow = table.convertRowIndexToModel(selectedRows[0]);
+            mensaje = "¿Está seguro de borrar la transacción ID " + tableModel.getValueAt(modelRow, 0) + "?";
+        } else {
+            mensaje = "¿Está seguro de borrar las " + selectedRows.length + " transacciones seleccionadas?";
         }
 
-        int conf = JOptionPane.showConfirmDialog(this,
-                "¿Está seguro de borrar la transacción ID " + idTransaccion + "?", "Confirmar",
-                JOptionPane.YES_NO_OPTION);
+        int conf = JOptionPane.showConfirmDialog(this, mensaje, "Confirmar", JOptionPane.YES_NO_OPTION);
+        
         if (conf == JOptionPane.YES_OPTION) {
-            if (transaccionDAO.borrarTransaccion(idTransaccion)) {
-                cargarDatos();
-            } else {
-                JOptionPane.showMessageDialog(this, "Error al borrar la transacción.", "Error",
-                        JOptionPane.ERROR_MESSAGE);
+            boolean algunError = false;
+            for (int viewRow : selectedRows) {
+                int modelRow = table.convertRowIndexToModel(viewRow);
+                int idTransaccion = (int) tableModel.getValueAt(modelRow, 0);
+                int idUsuarioTrans = (int) tableModel.getValueAt(modelRow, 6);
+
+                // Compruebo si el estudiante intenta borrar algo que no es suyo
+                if ("Estudiante".equals(usuarioActual.getRol()) && usuarioActual.getId() != idUsuarioTrans) {
+                    algunError = true;
+                    continue; 
+                }
+
+                if (!transaccionDAO.borrarTransaccion(idTransaccion)) {
+                    algunError = true;
+                }
             }
+            
+            if (algunError) {
+                JOptionPane.showMessageDialog(this, "Hubo problemas al borrar algunas transacciones (quizás por permisos).", "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+            
+            // Recargo la tabla para que se vea que han desaparecido
+            cargarDatos();
         }
     }
 
