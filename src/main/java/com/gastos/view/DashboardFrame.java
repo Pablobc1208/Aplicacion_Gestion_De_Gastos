@@ -123,39 +123,57 @@ public class DashboardFrame extends JFrame {
         // --- Panel Central (Tabla y Filtros) ---
         JPanel centerPanel = new JPanel(new BorderLayout(5, 5));
 
-        // Filtros
-        JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        filterPanel.add(new JLabel("Filtrar por Categoría:"));
-        txtFiltroCategoria = new JTextField(15);
+        // Filtros (Organizados en dos filas para visibilidad)
+        JPanel filterPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+        filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        JPanel row1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row1.add(new JLabel("Categoría:"));
+        txtFiltroCategoria = new JTextField(12);
+        row1.add(txtFiltroCategoria);
+
+        if ("Administrador".equals(usuarioActual.getRol())) {
+            row1.add(new JLabel("  Usuario:"));
+            txtFiltroUsuario = new JTextField(10);
+            row1.add(txtFiltroUsuario);
+        }
+
+        JPanel row2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row2.add(new JLabel("Desde:"));
+        txtFechaInicio = new JTextField(8);
+        row2.add(txtFechaInicio);
+        row2.add(new JLabel("  Hasta:"));
+        txtFechaFin = new JTextField(8);
+        row2.add(txtFechaFin);
+
         JButton btnFiltrar = new JButton("Filtrar");
+        btnFiltrar.setBackground(new Color(52, 152, 219));
+        btnFiltrar.setForeground(Color.WHITE);
         btnFiltrar.addActionListener(e -> aplicarFiltro());
+
         JButton btnLimpiarFiltro = new JButton("Limpiar");
         btnLimpiarFiltro.addActionListener(e -> {
             txtFiltroCategoria.setText("");
-            if (txtFiltroUsuario != null)
-                txtFiltroUsuario.setText("");
+            if (txtFiltroUsuario != null) txtFiltroUsuario.setText("");
             txtFechaInicio.setText("");
             txtFechaFin.setText("");
             aplicarFiltro();
         });
-        filterPanel.add(txtFiltroCategoria);
 
-        if ("Administrador".equals(usuarioActual.getRol())) {
-            filterPanel.add(new JLabel("  Usuario:"));
-            txtFiltroUsuario = new JTextField(10);
-            filterPanel.add(txtFiltroUsuario);
-        }
+        row2.add(new JLabel("  ")); // Espaciador
+        row2.add(btnFiltrar);
+        row2.add(btnLimpiarFiltro);
 
-        filterPanel.add(new JLabel("  Desde (dd-MM-yyyy):"));
-        txtFechaInicio = new JTextField(8);
-        filterPanel.add(txtFechaInicio);
+        filterPanel.add(row1);
+        filterPanel.add(row2);
 
-        filterPanel.add(new JLabel("  Hasta (dd-MM-yyyy):"));
-        txtFechaFin = new JTextField(8);
-        filterPanel.add(txtFechaFin);
+        // Añadir soporte para "Enter" en los campos de texto
+        java.awt.event.ActionListener enterAction = e -> aplicarFiltro();
+        txtFiltroCategoria.addActionListener(enterAction);
+        if (txtFiltroUsuario != null) txtFiltroUsuario.addActionListener(enterAction);
+        txtFechaInicio.addActionListener(enterAction);
+        txtFechaFin.addActionListener(enterAction);
 
-        filterPanel.add(btnFiltrar);
-        filterPanel.add(btnLimpiarFiltro);
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
         // Tabla
@@ -422,7 +440,7 @@ public class DashboardFrame extends JFrame {
 
         try {
             double cantidad = Double.parseDouble(cantidadStr);
-            String fecha = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+            String fecha = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
             Transaccion t = new Transaccion(0, usuarioActual.getId(), usuarioActual.getUsername(), tipo, categoria,
                     cantidad, fecha);

@@ -18,33 +18,33 @@ public class TransaccionDAO {
      * Obtiene todas las transacciones (para el Admin).
      */
     public List<Transaccion> obtenerTodas() {
-        String query = "SELECT id, usuario_id, tipo, categoria, cantidad, fecha FROM Transacciones";
-        return obtenerTransacciones(query, null);
+        String query = "SELECT t.id, t.usuario_id, u.username, t.tipo, t.categoria, t.cantidad, t.fecha " +
+                "FROM Transacciones t JOIN Usuarios u ON t.usuario_id = u.id";
+        return obtenerListaTransacciones(query, null);
     }
 
     /**
      * Obtiene las transacciones de un usuario específico.
+     * 
      * @param usuarioId ID del usuario
      */
     public List<Transaccion> obtenerPorUsuario(int usuarioId) {
-        String query = "SELECT id, usuario_id, tipo, categoria, cantidad, fecha FROM Transacciones WHERE usuario_id = ?";
-        return obtenerTransacciones(query, usuarioId);
+        String query = "SELECT t.id, t.usuario_id, u.username, t.tipo, t.categoria, t.cantidad, t.fecha " +
+                "FROM Transacciones t JOIN Usuarios u ON t.usuario_id = u.id " +
+                "WHERE t.usuario_id = ?";
+        return obtenerListaTransacciones(query, usuarioId);
     }
 
-    private List<Transaccion> obtenerTransacciones(String query, Integer parametroId) {
+    private List<Transaccion> obtenerListaTransacciones(String query, Integer parametroId) {
         List<Transaccion> lista = new ArrayList<>();
-        // Modificamos la query para hacer JOIN con Usuarios
-        String queryConJoin = query.replace("SELECT id, usuario_id, tipo, categoria, cantidad, fecha FROM Transacciones", 
-                                          "SELECT t.id, t.usuario_id, u.username, t.tipo, t.categoria, t.cantidad, t.fecha " +
-                                          "FROM Transacciones t JOIN Usuarios u ON t.usuario_id = u.id");
-        
+
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(queryConJoin)) {
-            
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+
             if (parametroId != null) {
                 pstmt.setInt(1, parametroId);
             }
-            
+
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     lista.add(new Transaccion(
@@ -54,8 +54,7 @@ public class TransaccionDAO {
                             rs.getString("tipo"),
                             rs.getString("categoria"),
                             rs.getDouble("cantidad"),
-                            rs.getString("fecha")
-                    ));
+                            rs.getString("fecha")));
                 }
             }
         } catch (SQLException e) {
@@ -66,23 +65,24 @@ public class TransaccionDAO {
 
     /**
      * Añade una nueva transacción.
+     * 
      * @param t Objeto Transaccion
      * @return true si se añadió con éxito
      */
     public boolean anadirTransaccion(Transaccion t) {
         String query = "INSERT INTO Transacciones (usuario_id, tipo, categoria, cantidad, fecha) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+
             pstmt.setInt(1, t.getUsuarioId());
             pstmt.setString(2, t.getTipo());
             pstmt.setString(3, t.getCategoria());
             pstmt.setDouble(4, t.getCantidad());
             pstmt.setString(5, t.getFecha());
-            
+
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
-            
+
         } catch (SQLException e) {
             System.err.println("Error al añadir transacción: " + e.getMessage());
         }
@@ -91,18 +91,19 @@ public class TransaccionDAO {
 
     /**
      * Borra una transacción por su ID.
+     * 
      * @param id ID de la transacción
      * @return true si se borró con éxito
      */
     public boolean borrarTransaccion(int id) {
         String query = "DELETE FROM Transacciones WHERE id = ?";
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+
             pstmt.setInt(1, id);
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
-            
+
         } catch (SQLException e) {
             System.err.println("Error al borrar transacción: " + e.getMessage());
         }
