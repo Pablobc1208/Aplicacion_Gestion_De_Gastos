@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -33,11 +34,19 @@ public class RegisterFrame extends JFrame {
     public RegisterFrame() {
         usuarioDAO = new UsuarioDAO();
 
-        setTitle("Control de Gastos - Registro");
+        setTitle("StudentPocket - Registro");
         setSize(450, 450);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+
+        // Pongo el icono también aquí para que todo sea igual
+        try {
+            ImageIcon appIcon = new ImageIcon(getClass().getResource("/logo.png"));
+            setIconImage(appIcon.getImage());
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar el icono del registro");
+        }
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -68,17 +77,20 @@ public class RegisterFrame extends JFrame {
         txtConfirmPassword = new JPasswordField();
         txtConfirmPassword.setPreferredSize(new java.awt.Dimension(200, 35));
 
-        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
         formPanel.add(lblUser, gbc);
         gbc.gridx = 1;
         formPanel.add(txtUsername, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
         formPanel.add(lblPass, gbc);
         gbc.gridx = 1;
         formPanel.add(txtPassword, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
         formPanel.add(lblConfirm, gbc);
         gbc.gridx = 1;
         formPanel.add(txtConfirmPassword, gbc);
@@ -125,7 +137,8 @@ public class RegisterFrame extends JFrame {
         String confirm = new String(txtConfirmPassword.getPassword());
 
         if (user.isEmpty() || pass.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -140,7 +153,8 @@ public class RegisterFrame extends JFrame {
         }
 
         if (usuarioDAO.registrarUsuario(user, pass)) {
-            JOptionPane.showMessageDialog(this, "Usuario registrado con éxito. Ya puedes iniciar sesión.", "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Usuario registrado con éxito. Ya puedes iniciar sesión.",
+                    "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
             new LoginFrame().setVisible(true);
             this.dispose();
         } else {

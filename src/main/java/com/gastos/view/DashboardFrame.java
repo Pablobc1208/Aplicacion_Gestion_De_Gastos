@@ -70,10 +70,18 @@ public class DashboardFrame extends JFrame {
         this.usuarioActual = usuario;
         this.transaccionDAO = new TransaccionDAO();
 
-        setTitle("Dashboard - Control de Gastos (" + usuarioActual.getRol() + ")");
+        setTitle("StudentPocket - Panel de Control (" + usuarioActual.getRol() + ")");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        // Pongo el logo de la app como icono de la ventana (el de arriba a la izquierda)
+        try {
+            ImageIcon appIcon = new ImageIcon(getClass().getResource("/logo.png"));
+            setIconImage(appIcon.getImage());
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar el icono de la ventana");
+        }
 
         // Confirmar antes de salir
         addWindowListener(new WindowAdapter() {

@@ -34,11 +34,19 @@ public class LoginFrame extends JFrame {
     public LoginFrame() {
         usuarioDAO = new UsuarioDAO();
 
-        setTitle("Control de Gastos Estudiantil - Login");
+        setTitle("StudentPocket - Iniciar Sesión");
         setSize(450, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+
+        // Pongo el icono de la app arriba a la izquierda
+        try {
+            ImageIcon appIcon = new ImageIcon(getClass().getResource("/logo.png"));
+            setIconImage(appIcon.getImage());
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar el icono del login");
+        }
 
         // Panel principal con BorderLayout y un poco de margen exterior
         JPanel mainPanel = new JPanel(new BorderLayout());
